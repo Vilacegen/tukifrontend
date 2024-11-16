@@ -8,18 +8,18 @@ from dotenv import load_dotenv
 import time
 from report import report_bp, generate_feedback_summary
 from real_time_feedback import real_time_feedback_bp
+from feedback_processor import feedback_processor_bp
 
 
-# Load environment variables
 load_dotenv()
 
-# Initialize Flask app
 app = Flask(__name__)
 
 # Register blueprints
 app.register_blueprint(report_bp, url_prefix='/report')
 app.register_blueprint(real_time_feedback_bp, url_prefix="/real_time_feedback")
-app.register_blueprint(report_bp, url_prefix='/feedback_processor')
+app.register_blueprint(feedback_processor_bp, url_prefix='/feedback_processor')
+
 
 # Configure logging
 logging.basicConfig(
@@ -74,7 +74,7 @@ def generate_summary(feedback_list):
             messages=[
                 {"role": "user", "content": prompt}
             ],
-            model="llama3-8b-8192"  # Use your appropriate model here
+            model="llama3-8b-8192"  
         )
         
         summary = chat_completion.choices[0].message.content

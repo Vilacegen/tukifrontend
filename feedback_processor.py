@@ -1,9 +1,9 @@
-import os
 import pandas as pd
 import json
 from groq import Groq
 from typing import List, Dict
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
+import os
 
 # Create a blueprint
 feedback_processor_bp = Blueprint('feedback_processor', __name__)
@@ -13,7 +13,6 @@ class FeedbackProcessor:
         # Initialize the Groq client with the API key
         self.client = Groq(api_key=api_key)
 
-    @feedback_processor_bp.route('/process_feedback', methods=['POST'])
     def process_startup_feedback(self, startup_data: Dict, judge_feedback: List[Dict]) -> Dict:
         """
         Process feedback for a single startup using Groq (formerly Claude)
@@ -26,7 +25,7 @@ class FeedbackProcessor:
         
         # Get analysis from Groq
         response = self.client.chat.completions.create(
-            model="llama3-8b-8192",  # Adjust the model as needed for Groq
+            model="llama3-8b-8192",  
             messages=[
                 {
                     "role": "user",
@@ -47,32 +46,22 @@ class FeedbackProcessor:
     
     def _aggregate_feedback(self, judge_feedback: List[Dict]) -> Dict:
         """
-        Aggregate scores and feedback from multiple judges
+        Aggregate feedback from judges (example logic)
         """
-        df = pd.DataFrame(judge_feedback)
+        scores = [feedback.get('score', 0) for feedback in judge_feedback]
+        feedback_comments = [feedback.get('comment', '') for feedback in judge_feedback]
         
-        # Calculate normalized scores
-        score_columns = [col for col in df.columns if col.startswith('score_')]
-        normalized_scores = {}
-        
-        for col in score_columns:
-            scores = df[col].values
-            normalized = (scores - scores.mean()) / scores.std()
-            normalized_scores[col] = normalized.mean()
-        
-        written_feedback = df['feedback'].tolist()
-
         return {
-            "scores": normalized_scores,
-            "feedback": written_feedback
+            "scores": scores,
+            "feedback": feedback_comments
         }
-    
+
     def _create_analysis_prompt(self, startup_data: Dict, aggregated_feedback: Dict) -> str:
         """
         Create a prompt for Groq to analyze the feedback
         """
         prompt = f"""
-        Please analyze the following judge feedback for {startup_data['name']}:
+        Startup Name: {startup_data['name']}
         
         Normalized Scores:
         {json.dumps(aggregated_feedback['scores'], indent=2)}
@@ -89,20 +78,51 @@ class FeedbackProcessor:
         """
         Structure the response content from Groq to fit the desired output format
         """
-        # Here you can modify the response structure depending on Groq's output format
+        
         return response_content.strip()
 
-# Example usage:
-api_key = os.getenv("GROQ_API_KEY")
-feedback_processor = FeedbackProcessor(api_key)
 
-# Example data (this would typically come from your database or user input)
-startup_data = {"name": "Tech Startup XYZ"}
-judge_feedback = [
-    {"score_problem": 4, "score_solution": 3, "score_communication": 5, "feedback": "Great idea, but execution needs work."},
-    {"score_problem": 5, "score_solution": 4, "score_communication": 4, "feedback": "Strong solution but unclear market fit."},
-    # Add more judge feedback here...
-]
 
-result = feedback_processor.process_startup_feedback(startup_data, judge_feedback)
-print(json.dumps(result, indent=2))
+feedback_processor = FeedbackProcessor(api_key=os.environ.get('GROQ_API_KEY'))
+
+@feedback_processor_bp.route('/process_feedback', methods=['POST'])
+def process_startup_feedback():
+    """
+    Process feedback for a startup using the `FeedbackProcessor` instance
+    """
+    try:
+        data = request.json
+        startup_data = data.get("startup_data")
+        judge_feedback = data.get("judge_feedback")
+
+        if not startup_data or not judge_feedback:
+            return jsonify({"error": "Startup data and judge feedback are required."}), 400
+
+        # Use the FeedbackProcessor instance to process feedback
+        result = feedback_processor.process_startup_feedback(startup_data, judge_feedback)
+        
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@feedback_processor_bp.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    """
+    API endpoint to handle user input for startup data and judge feedback.
+    """
+    try:
+        data = request.json
+        startup_data = data.get("startup_data")
+        judge_feedback = data.get("judge_feedback")
+
+        if not startup_data or not judge_feedback:
+            return jsonify({"error": "Startup data and judge feedback are required."}), 400
+
+        # Use the FeedbackProcessor instance to process feedback
+        result = feedback_processor.process_startup_feedback(startup_data, judge_feedback)
+        
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
