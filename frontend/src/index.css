@@ -309,7 +309,7 @@ html {
   display: flex;
   justify-content: flex-start; /* Aligns buttons to the left */
   gap: 20px; /* Adds space between buttons */
-  margin-top: -60px; /* Optional: adds space above the buttons */
+  margin-top: -60px; /* adds space above the buttons */
   width: 100%; /* Makes the container take full width */
   margin-left: 54rem;
 }

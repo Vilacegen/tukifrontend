@@ -20,8 +20,6 @@ import {
 function App() {
   const [activeTab, setActiveTab] = useState("startups");
   const [showModal, setShowModal] = useState(false);
-
-  // Startup states
   const [rows, setRows] = useState([]);
   const [newRow, setNewRow] = useState({
     company: "",
@@ -29,19 +27,10 @@ function App() {
     teamLeader: "",
     email: "",
     pitchSlot: "",
-    status: "-----",
+    status: "-----" /* default value */,
   });
 
-  // Judges states
-  const [judgeRows, setJudgeRows] = useState([]);
-  const [newJudgeRow, setNewJudgeRow] = useState({
-    idNo: "",
-    name: "",
-    email: "",
-    status: "Assigned",
-  });
-
-  // Handle input changes for the startup modal form
+  // Handle input changes for the modal form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewRow((prevRow) => ({
@@ -50,62 +39,29 @@ function App() {
     }));
   };
 
-  // Handle input changes for the judges modal form
-  const handleJudgeInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewJudgeRow((prevRow) => ({
-      ...prevRow,
-      [name]: value,
-    }));
-  };
-
-  // Add a new startup row or update an existing one
+  // Add a new row or update an existing one
   const handleAddRow = () => {
     setRows((prevRows) => [...prevRows, newRow]);
-    setShowModal(false);
+    setShowModal(false); // Close modal after adding
     setNewRow({
       company: "",
       category: "",
       teamLeader: "",
       email: "",
       pitchSlot: "",
-      status: "In Session",
+      status: "In Session", //reset to default
     });
   };
 
-  // Add a new judge row or update an existing one
-  const handleAddJudgeRow = () => {
-    setJudgeRows((prevRows) => [...prevRows, newJudgeRow]);
-    setShowModal(false);
-    setNewJudgeRow({
-      idNo: "",
-      name: "",
-      email: "",
-      status: "Assigned",
-    });
-  };
-
-  // Delete a startup row
+  // Delete a row
   const handleDeleteRow = (index) => {
     setRows(rows.filter((_, i) => i !== index));
   };
 
-  // Delete a judge row
-  const handleDeleteJudgeRow = (index) => {
-    setJudgeRows(judgeRows.filter((_, i) => i !== index));
-  };
-
-  // Edit an existing startup row
+  // Edit an existing row
   const handleEditRow = (index) => {
     setNewRow(rows[index]);
-    setRows(rows.filter((_, i) => i !== index));
-    setShowModal(true);
-  };
-
-  // Edit an existing judge row
-  const handleEditJudgeRow = (index) => {
-    setNewJudgeRow(judgeRows[index]);
-    setJudgeRows(judgeRows.filter((_, i) => i !== index));
+    setRows(rows.filter((_, i) => i !== index)); // Temporarily remove row to avoid duplication
     setShowModal(true);
   };
 
@@ -232,7 +188,7 @@ function App() {
           onClick={() => setShowModal(true)}
         >
           <FontAwesomeIcon icon={faPlus} />
-          {activeTab === "judges" ? "Add Judge" : "Add Startup"}
+          Add Startup
         </button>
         <button className="import-button">
           <FontAwesomeIcon icon={faDownload} />
@@ -287,22 +243,9 @@ function App() {
           </table>
         </div>
       )}
-      {activeTab === "judges" && (
-        <Judges
-          showModal={showModal}
-          setShowModal={setShowModal}
-          judgeRows={judgeRows}
-          setJudgeRows={setJudgeRows}
-          newJudgeRow={newJudgeRow}
-          setNewJudgeRow={setNewJudgeRow}
-          handleJudgeInputChange={handleJudgeInputChange}
-          handleAddJudgeRow={handleAddJudgeRow}
-          handleDeleteJudgeRow={handleDeleteJudgeRow}
-          handleEditJudgeRow={handleEditJudgeRow}
-        />
-      )}
-      {/* Modal for Startups */}
-      {showModal && activeTab === "startups" && (
+      {activeTab === "judges" && <Judges />} {/* Render the judges component */}
+      {/* Modal */}
+      {showModal && (
         <div className="modal">
           <div className="modal-content">
             <span className="close-button" onClick={() => setShowModal(false)}>
@@ -336,6 +279,7 @@ function App() {
                   />
                 </label>
               </div>
+
               <div className="form-field">
                 <label>
                   Team Leader:
@@ -372,6 +316,7 @@ function App() {
                   />
                 </label>
               </div>
+
               <div className="form-field">
                 <label>Status:</label>
                 <select
