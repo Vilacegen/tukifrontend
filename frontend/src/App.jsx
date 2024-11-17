@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Judges from "./judges";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,6 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
+  const [activeTab, setActiveTab] = useState("startups");
   const [showModal, setShowModal] = useState(false);
   const [rows, setRows] = useState([]);
   const [newRow, setNewRow] = useState({
@@ -91,7 +93,6 @@ function App() {
         </label>
         <FontAwesomeIcon icon={faUser} className="user-icon" cursor="pointer" />
       </div>
-
       {/* Cards */}
       <div className="card-container">
         <div className="card shadow">
@@ -135,16 +136,39 @@ function App() {
           </div>
         </div>
       </div>
-
       {/* Tabs */}
       <div className="tabs-container">
-        <div className="tab active">Startups</div>
-        <div className="tab">Judges</div>
-        <div className="tab">Schedule</div>
-        <div className="tab">Rounds</div>
-        <div className="tab">Settings</div>
+        <div
+          className={`tab ${activeTab === "startups" ? "active" : ""}`}
+          onClick={() => setActiveTab("startups")}
+        >
+          Startups
+        </div>
+        <div
+          className={`tab ${activeTab === "judges" ? "active" : ""}`}
+          onClick={() => setActiveTab("judges")}
+        >
+          Judges
+        </div>
+        <div
+          className={`tab ${activeTab === "schedule" ? "active" : ""}`}
+          onClick={() => setActiveTab("schedule")}
+        >
+          Schedule
+        </div>
+        <div
+          className={`tab ${activeTab === "rounds" ? "active" : ""}`}
+          onClick={() => setActiveTab("rounds")}
+        >
+          Rounds
+        </div>
+        <div
+          className={`tab ${activeTab === "settings" ? "active" : ""}`}
+          onClick={() => setActiveTab("settings")}
+        >
+          Settings
+        </div>
       </div>
-
       {/* Search Bar */}
       <div className="search-container">
         <input
@@ -157,7 +181,6 @@ function App() {
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </button>
       </div>
-
       {/* Buttons */}
       <div className="button-container">
         <button
@@ -176,50 +199,51 @@ function App() {
           Export
         </button>
       </div>
-
       {/* Table */}
-      <div className="table-wrapper">
-        <table className="startup-table">
-          <thead>
-            <tr>
-              <th>Company</th>
-              <th>Category</th>
-              <th>Team Leader</th>
-              <th>Email</th>
-              <th>Pitch Slot</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, index) => (
-              <tr key={index}>
-                <td>{row.company}</td>
-                <td>{row.category}</td>
-                <td>{row.teamLeader}</td>
-                <td>{row.email}</td>
-                <td>{formatTime(row.pitchSlot)}</td>
-                <td>{row.status}</td>
-                <td>
-                  <FontAwesomeIcon
-                    icon={faPenToSquare}
-                    className="icon"
-                    cursor="pointer"
-                    onClick={() => handleEditRow(index)}
-                  />
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    className="icon"
-                    cursor="pointer"
-                    onClick={() => handleDeleteRow(index)}
-                  />
-                </td>
+      {activeTab === "startups" && (
+        <div className="table-wrapper">
+          <table className="startup-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Category</th>
+                <th>Team Leader</th>
+                <th>Email</th>
+                <th>Pitch Slot</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={index}>
+                  <td>{row.company}</td>
+                  <td>{row.category}</td>
+                  <td>{row.teamLeader}</td>
+                  <td>{row.email}</td>
+                  <td>{formatTime(row.pitchSlot)}</td>
+                  <td>{row.status}</td>
+                  <td>
+                    <FontAwesomeIcon
+                      icon={faPenToSquare}
+                      className="icon"
+                      cursor="pointer"
+                      onClick={() => handleEditRow(index)}
+                    />
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      className="icon"
+                      cursor="pointer"
+                      onClick={() => handleDeleteRow(index)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {activeTab === "judges" && <Judges />} {/* Render the judges component */}
       {/* Modal */}
       {showModal && (
         <div className="modal">
