@@ -1,39 +1,41 @@
 /* Table */
 .table-wrapperr {
-  width: 100%;
-  max-width: 100%;
+  width: 50%;
+  max-width: 50%;
   overflow-x: auto; /* allows horizontal scrolling within the table container*/
-  margin: 0 auto;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
+  margin: 2rem auto;
+  overflow-x: auto;
   box-sizing: border-box;
   border-radius: 5px;
-  overflow: hidden;
 }
 
 .judge-table {
-  width: 90%; /* Makes the table width 90% of the container */
-  /* max-width: 1200px; */ /* Optional: Set a max-width if you want to limit it */
-  margin: 0 auto; /* Centers the table and adds equal margins on both sides */
+  width: 50%; /* Makes the table width 100% of the container */
+  /* margin: 0 auto; */ /* Centers the table and adds equal margins on both sides */
   border-collapse: collapse;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   box-sizing: border-box;
   border-radius: 5px;
+  margin-left: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .judge-table th,
 .judge-table td {
-  padding: 10px;
+  padding: 8px;
   text-align: left;
   border-bottom: 1px solid #ccc; /* Thin line between rows */
+  font-size: 0.9rem;
 }
 
 .judge-table th {
   background-color: #f4f4f4;
+  font-size: 0.95rem;
 }
 
 .judge-table .icon:last-child {
-  margin-left: 38px;
+  margin-left: 20px;
 }
 
 .add-judge-buttonn {
