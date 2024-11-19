@@ -38,6 +38,10 @@
   margin-left: 20px;
 }
 
+.icon {
+  right: 2rem;
+}
+
 .add-judge-buttonn {
   background-color: #0a2540; /* Same theme as search button */
   color: white;

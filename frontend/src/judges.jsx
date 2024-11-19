@@ -11,7 +11,7 @@ function Judges({
   showModal,
   setShowModal,
   judgeRows,
-  setJudgeRows,
+  /* setJudgeRows, */
   newJudgeRow,
   handleJudgeInputChange,
   handleAddJudgeRow,
@@ -28,7 +28,7 @@ function Judges({
               <th>ID NO</th>
               <th>NAME</th>
               <th>EMAIL</th>
-              <th>STATUS</th>
+              <th>EXPERTISE</th>
               <th>ACTIONS</th>
             </tr>
           </thead>
@@ -38,20 +38,18 @@ function Judges({
                 <td>{row.idNo}</td>
                 <td>{row.name}</td>
                 <td>{row.email}</td>
-                <td>
-                  <select
-                    value={row.status}
+                <td>{row.expertise}</td>
+                {/* <td>
+                  <input
+                    value={row.expertise}
                     onChange={(e) => {
                       const updatedRows = [...judgeRows];
-                      updatedRows[index].status = e.target.value;
+                      updatedRows[index].expertise = e.target.value;
                       setJudgeRows(updatedRows);
                     }}
-                  >
-                    <option value="Assigned">Assigned</option>
-                    <option value="Unassigned">Unassigned</option>
-                    <option value="Unavailable">Unavailable</option>
-                  </select>
-                </td>
+                    placeholder="Enter expertise"
+                  />
+                </td> */}
                 <td>
                   <FontAwesomeIcon
                     icon={faPenToSquare}
@@ -120,17 +118,17 @@ function Judges({
                 </label>
               </div>
               <div className="form-field">
-                <label>Status:</label>
-                <select
-                  name="status"
-                  value={newJudgeRow.status}
-                  onChange={handleJudgeInputChange}
-                  required
-                >
-                  <option value="Assigned">Assigned</option>
-                  <option value="Unassigned">Unassigned</option>
-                  <option value="Unavailable">Unavailable</option>
-                </select>
+                <label>
+                  Expertise:
+                  <input
+                    type="text"
+                    name="expertise"
+                    value={newJudgeRow.expertise}
+                    onChange={handleJudgeInputChange}
+                    placeholder="Enter expertise"
+                    required
+                  />
+                </label>
               </div>
               <button
                 type="button"

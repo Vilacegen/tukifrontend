@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import Judges from "./judges";
-
+import ImportJudgesModal from "./importJudgesModal";
 import Schedule from "./schedule";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +23,7 @@ import {
 function Dashboard() {
   const [activeTab, setActiveTab] = useState("startups");
   const [showModal, setShowModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   // Startup states
   const [rows, setRows] = useState([]);
@@ -230,7 +231,7 @@ function Dashboard() {
           </button>
         </div>
       )}
-      {/* Buttons */}
+
       {/* Buttons */}
       {activeTab !== "settings" && (
         <div className="button-container">
@@ -245,7 +246,10 @@ function Dashboard() {
               ? "Add Schedule"
               : "Add Startup"}
           </button>
-          <button className="import-button">
+          <button
+            className="import-button"
+            onClick={() => setShowImportModal(true)}
+          >
             <FontAwesomeIcon icon={faDownload} />
             Import
           </button>
@@ -412,6 +416,14 @@ function Dashboard() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* ImportJudgesModal component */}
+      {activeTab === "judges" && (
+        <ImportJudgesModal
+          showImportModal={showImportModal}
+          setShowImportModal={setShowImportModal}
+        />
       )}
     </div>
   );
